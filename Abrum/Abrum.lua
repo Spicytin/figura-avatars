@@ -1,4 +1,5 @@
 local CameraAPI = require("FOXCamera")
+local anims = require("EZAnims")
 
 models.Abrum.root.Head:setParentType("None")
 models.Abrum.root.Body:setParentType("None")
@@ -27,15 +28,29 @@ models.Abrum.root.Right_Leg["Right Pants"]:setPrimaryTexture("Skin")
 function events.render(_, ctx)
   local mainItem=player:getHeldItem()
   if mainItem.id=="minecraft:bow" or mainItem.id=="minecraft:crossbow" or mainItem.id=="minecraft:trident" then
-  vanilla_model.RIGHT_ITEM:setVisible(false)
+  	vanilla_model.RIGHT_ITEM:setVisible(false)
   else
-  vanilla_model.RIGHT_ITEM:setVisible(true)
+  	vanilla_model.RIGHT_ITEM:setVisible(true)
   end
   if mainItem.id:find("_sword") then
-  models.Abrum.over_power.ulra_super.super.body_main.turret.gun.barrel.RightItemPivot:setRot(10,0,0)
+  	models.Abrum.over_power.ulra_super.super.body_main.turret.gun.barrel.RightItemPivot:setRot(10,0,0)
   else
-  models.Abrum.over_power.ulra_super.super.body_main.turret.gun.barrel.RightItemPivot:setRot(90,0,0)
+  	models.Abrum.over_power.ulra_super.super.body_main.turret.gun.barrel.RightItemPivot:setRot(90,0,0)
   end
+end
+
+local abrum = anims:addBBModel(animations.Abrum)
+
+function events.render(delta)
+  local vehicle = player:getVehicle()
+  local riding_minecart = vehicle and vehicle:getType():find("minecart")
+  local riding_boat = vehicle and vehicle:getType():find("boat")
+  local state = world.getBlockState(player:getPos() + vec(0,-0.1,0))
+  if riding_boat and not state:getID():find("water") or riding_minecart then
+  	abrum:setState("b")
+  	else
+  	abrum:setState()
+  	end
 end
 
 function events.render()
