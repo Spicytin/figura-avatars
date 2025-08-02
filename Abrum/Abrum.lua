@@ -27,6 +27,9 @@ models.Abrum.root.Right_Leg["Right Pants"]:setPrimaryTexture("Skin")
 
 function events.render(_, ctx)
   local mainItem=player:getHeldItem()
+  local in_firstperson = ctx == "FIRST_PERSON"
+  vanilla_model.LEFT_ITEM:setVisible(not in_firstperson)
+  vanilla_model.LEFT_ITEM:setVisible(in_firstperson)
   if mainItem.id=="minecraft:bow" or mainItem.id=="minecraft:crossbow" or mainItem.id=="minecraft:trident" then
   	vanilla_model.RIGHT_ITEM:setVisible(false)
   else
@@ -37,9 +40,15 @@ function events.render(_, ctx)
   else
   	models.Abrum.over_power.ulra_super.super.body_main.turret.gun.barrel.RightItemPivot:setRot(90,0,0)
   end
+  if (player:getPose() == "SLEEPING") then
+  models.Abrum.over_power:setSecondaryRenderType("NONE")
+  else
+  models.Abrum.over_power:setSecondaryRenderType("EMISSIVE")
+  end
 end
 
 local abrum = anims:addBBModel(animations.Abrum)
+local abrum2 = anims:addBBModel(animations.Abrum)
 
 function events.render(delta)
   local vehicle = player:getVehicle()
@@ -76,6 +85,7 @@ end
 
 local action = mainPage:newAction()
     :title("Nod")
+    :item("lime_concrete")
     :onLeftClick(pings.nod)
     
 function pings.shake()
@@ -84,7 +94,23 @@ end
 
 local action = mainPage:newAction()
     :title("Shake")
+    :item("red_concrete")
     :onLeftClick(pings.shake)
+
+function pings.sit(state)
+	if state then 
+    		abrum2:setState("toggle")
+	else
+    		abrum2:setState()
+    	end
+end
+
+local toggleaction = mainPage:newAction()
+    :title("Sit - Plugin")
+    :toggleTitle("Sit - Command")
+    :item("oak_stairs")
+    :toggleItem("oak_slab")
+    :setOnToggle(pings.sit)
 
 local myCamera = CameraAPI.newCamera(
   models.Abrum.root.Head.camera, -- (nil) cameraPart
