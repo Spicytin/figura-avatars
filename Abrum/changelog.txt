@@ -1,0 +1,23 @@
+Version 1.0 (July 31, 2025): 
+- Initial release
+
+Version 1.1 (Aug 1, 2025):
+- Added pivot locations for parrots and spyglass
+- fixed sitting animations for minecarts and boats (when on ground)
+
+Version 1.2 (Aug 2, 2025):
+- The tank now shrinks when crawling
+- Emissives/lights for headlights and rear lights are automatically turned off when the player is in sleeping state
+- Made the left items invisible in third person for now
+- Added icons for nod and shake actions
+- Added sit toggle in the action wheel (Plugin toggle is for servers with sitable chairs/slabs; and Command toggle is for servers with sit everywhere commands)
+- Compressed the texture PNGs! (avatar size is now from 99kb to 89kb!)
+
+Version 1.3 (Aug 5, 2025)
+- Added green color version of the tank separately
+- Added spin toggle in action wheel (spin your tank!)
+- Added Auria's patpat script as well as 'on pat' and 'patting' anims
+- Added hurt and death sound for the avatar (uses iron golem's sounds for taking damage and vanilla explosion sound for death)
+- Fixed UV maps on a few of the model parts
+- Hid more throwables for player's right hand
+- Made the icon for 'Sit - Command' mode more appropriate (uses stick instead of slab)
