@@ -25,6 +25,9 @@ models.Abrum.root.Left_Leg["Left Pants"]:setPrimaryTexture("Skin")
 models.Abrum.root.Right_Leg.RightLeg:setPrimaryTexture("Skin") 
 models.Abrum.root.Right_Leg["Right Pants"]:setPrimaryTexture("Skin") 
 
+local ride = anims:addBBModel(animations.Abrum)
+local sit = anims:addBBModel(animations.Abrum)
+
 function events.render(_, ctx)
   local item=player:getHeldItem()
   local in_firstperson = ctx == "FIRST_PERSON"
@@ -46,9 +49,6 @@ function events.render(_, ctx)
   models.Abrum.over_power:setSecondaryRenderType("EMISSIVE")
   end
 end
-
-local ride = anims:addBBModel(animations.Abrum)
-local sit = anims:addBBModel(animations.Abrum)
 
 function events.render(delta)
   local vehicle = player:getVehicle()
@@ -91,7 +91,7 @@ function events.ON_PLAY_SOUND(id, pos, vol, pitch, loop, cat, path)
     
     if distance > 1 then return end 
     if id:find(".death") then  
-        sounds:playSound("entity.iron_golem.hurt", pos, vol, pitch)
+        sounds:playSound("entity.iron_golem.death", pos, vol, pitch)
         sounds:playSound("entity.generic.explode", pos, vol, pitch)
         return true
     end
@@ -143,6 +143,52 @@ local toggleaction = mainPage:newAction()
     :item("oak_stairs")
     :toggleItem("stick")
     :setOnToggle(pings.sit)
+
+function pings.chatOpen(isChatOpen)
+	if isChatOpen then 
+  		models.Abrum.over_power.ulra_super.super.body_main.turret.citv:setSecondaryRenderType("EMISSIVE")
+	else
+    		models.Abrum.over_power.ulra_super.super.body_main.turret.citv:setSecondaryRenderType("NONE")
+    	end
+end
+
+if host:isHost() then
+  local wasChatOpen
+  function events.tick()
+    local isChatOpen = host:isChatOpen()
+    if wasChatOpen ~= isChatOpen then
+      wasChatOpen = isChatOpen
+      pings.chatOpen(isChatOpen)
+    end
+  end
+end
+
+local microphoneOffTime = 0
+local isMicrophoneOn = false
+
+function pings.talking(talk)
+	if talk then 
+  		models.Abrum.over_power.ulra_super.super.body_main.turret.citv:setSecondaryRenderType("EMISSIVE")
+	else
+    		models.Abrum.over_power.ulra_super.super.body_main.turret.citv:setSecondaryRenderType("NONE")
+    	end
+end
+
+function events.tick()
+    local previousMicState = isMicrophoneOn
+    microphoneOffTime = microphoneOffTime + 1
+    isMicrophoneOn = microphoneOffTime <= 2
+
+    if previousMicState ~= isMicrophoneOn then
+        pings.talking(isMicrophoneOn)
+    end
+end
+
+if client:isModLoaded("figurasvc") and host:isHost() then
+    function events.host_microphone()
+        microphoneOffTime = 0
+    end
+end
 
 local myCamera = CameraAPI.newCamera(
   models.Abrum.root.Head.camera, -- (nil) cameraPart
@@ -208,4 +254,3 @@ table.insert(patpat.patting, function()
   animations.Abrum.patting:play()
   print("patpat...")
 end)
-
